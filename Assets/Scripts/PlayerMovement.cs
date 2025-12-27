@@ -101,59 +101,15 @@ public class PlayerMovement : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         wallSlide();
-        //Prevents Player from moving during dash
-        if (isDashing)
-        {
-            return;
-        }
-
-        if(isLadder && Mathf.Abs(verticalInput) > 0f)
-        {
-            Debug.Log("touchedboth");
-            isClimbing = true;
-        }
-
-        // Apply movement
-
-        //Creates extra JumpTime jumping off the ledge smoother by creating extra time to jump off-land
-        if (IsGrounded() == true)
-        {
-            coyoteTimeCounter = coyoteTime;
-            rb.gravityScale = gravitySlideCheck;
-        }
-        else
-        {
-            coyoteTimeCounter -= Time.deltaTime;
-            rb.gravityScale = gravityScale;
-        }
-
-        //Creates extra time before landing to make jumping smoother when pressing jump quickly
-        if (Input.GetButton("Jump"))
-        {
-            jumpBufferCounter = jumpBufferTime;
-        }
-        else
-        {
-            jumpBufferCounter -= Time.deltaTime;
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            if(canDash)
-            {
-                StartCoroutine(Dash());
-            }
-        }
+        CheckDashing();
+        CheckJump();
+        CheckClimbing();
     }
 
     private void FixedUpdate()
     {
         Physics2D.IgnoreLayerCollision(8, 6, true);
-        //Prevents Player from moving during dash
-        if (isDashing)
-        {
-            return;
-        }
+
 
         if (isClimbing)
         {
@@ -186,6 +142,54 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.gravityScale = gravityScale * gravityMultiplier;
         }
+    }
+
+    private void CheckClimbing()
+    {
+        if(isLadder && Mathf.Abs(verticalInput) > 0f)
+        {
+            Debug.Log("touchedboth");
+            isClimbing = true;
+        }
+    }
+    
+    private void CheckJump()
+    {
+        //Creates extra time before landing to make jumping smoother when pressing jump quickly
+        if (Input.GetButton("Jump"))
+        {
+            jumpBufferCounter = jumpBufferTime;
+        }
+        else
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+        //Creates extra JumpTime jumping off the ledge smoother by creating extra time to jump off-land
+        if (IsGrounded() == true)
+        {
+            coyoteTimeCounter = coyoteTime;
+            rb.gravityScale = gravitySlideCheck;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+            rb.gravityScale = gravityScale;
+        }
+    }
+    private void CheckDashing()
+    {
+         if (isDashing)
+         {
+            return;
+         }
+        
+         if (Input.GetKeyDown(KeyCode.LeftShift))
+         {
+            if(canDash)
+            {
+                StartCoroutine(Dash());
+            }
+         }
     }
 
     private void Run(float movementSpeed)
