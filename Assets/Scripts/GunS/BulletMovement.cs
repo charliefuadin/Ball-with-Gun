@@ -38,11 +38,11 @@ public class BulletMovement : MonoBehaviour
             {
                 if(collider == "Enemy")
                 {
-                    Health health = GetComponent<Health>();
+                    Health health = collision.gameObject.GetComponent<Health>();
                     if(health != null)
                     {
-                        Vector2 direction = (transform.position - collision.gameObject.transform.position).normalized;
-                        health.enemyHit(direction, 85f, bulletDamage, transform);
+                        Vector2 direction = (collision.gameObject.transform.position - transform.position).normalized;
+                        health.enemyHit(direction, 85f, bulletDamage);
                     }
                 }
                 else

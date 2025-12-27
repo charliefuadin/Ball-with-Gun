@@ -1718,12 +1718,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -1990,12 +1995,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -2261,8 +2271,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
+      propertyPath: maxHealth
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -2529,12 +2549,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -2801,12 +2826,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -3073,12 +3103,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -3350,12 +3385,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -3622,12 +3662,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
@@ -3894,12 +3939,17 @@ PrefabInstance:
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: maxHealth
-      value: 75
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: stillTime
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}

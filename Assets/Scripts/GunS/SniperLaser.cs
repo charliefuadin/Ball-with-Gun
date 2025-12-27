@@ -87,7 +87,8 @@ public class SniperLaser : MonoBehaviour
             {
                 break;
             }
-            health.enemyHit(direction, 200, 60, objectHit.transform);
+            health.enemyHit(direction, 200, 60);
+            Instantiate(enemyHitParticle, objectHit.point, objectHit.transform.rotation);
             //health.currentHealth -= 60;
             //Instantiate(enemyHitParticle, objectHit.point, objectHit.transform.rotation);
         }
