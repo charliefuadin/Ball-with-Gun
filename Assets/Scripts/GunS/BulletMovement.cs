@@ -31,21 +31,23 @@ public class BulletMovement : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {
+    {   
         foreach (string collider in collisionList)
         {
             if (collision.gameObject.CompareTag(collider))
             {
-                Vector3 pos = transform.position;
-                Quaternion rotation = transform.rotation;
-
-                if(collider == "Enemy" || collider =="Bullet")
+                if(collider == "Enemy")
                 {
-                    Instantiate(enemyHitParticle, pos, rotation); 
+                    Health health = collision.gameObject.GetComponent<Health>();
+                    if(health != null)
+                    {
+                        Vector2 direction = (collision.gameObject.transform.position - transform.position).normalized;
+                        health.enemyHit(direction, health.gloablKnockPower, bulletDamage);
+                    }
                 }
                 else
                 {
-                    Instantiate(bulletParticle, pos, rotation);
+                    Instantiate(bulletParticle, transform.position, transform.rotation);
                 }
                 Destroy(gameObject);
             }

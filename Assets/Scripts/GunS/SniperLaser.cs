@@ -79,16 +79,15 @@ public class SniperLaser : MonoBehaviour
             {
                 continue;
             }
+            hitEnemies.Add(health);
             //Declares enemy as already pierced
             //Also adds to the list
-            hitEnemies.Add(health); 
 
             if (hitEnemies.Count > pierceAmount)
             {
                 break;
             }
-            health.enemyHit(direction, 200);
-            health.currentHealth -= 60;
+            health.enemyHit(direction, 200, 60);
             Instantiate(enemyHitParticle, objectHit.point, objectHit.transform.rotation);
         }
     }

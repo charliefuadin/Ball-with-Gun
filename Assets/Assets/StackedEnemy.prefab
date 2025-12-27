@@ -736,14 +736,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 150
-  currentHealth: 0
   collisionList:
   - Bullet
   deathParticle: {fileID: 8376915286951860943, guid: ea18ea98dea7daf409772c4eaafcb22d,
     type: 3}
   sprite: {fileID: 3898396566750064280}
   currentSprite: {r: 0, g: 0, b: 0, a: 0}
-  gloablKnockPower: 85
+  gloablKnockPower: 60
   anim: {fileID: 5353286645200940436}
 --- !u!95 &5353286645200940436
 Animator:
@@ -1330,6 +1329,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
+      propertyPath: enemyHitParticle
+      value: 
+      objectReference: {fileID: 1647914593940153521, guid: af5b9e9b9b6914f45ae4398e01ba7c26,
+        type: 3}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
       propertyPath: gloablKnockPower
       value: 100
       objectReference: {fileID: 0}
@@ -1532,6 +1537,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
+      propertyPath: enemyHitParticle
+      value: 
+      objectReference: {fileID: 1647914593940153521, guid: af5b9e9b9b6914f45ae4398e01ba7c26,
+        type: 3}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
       propertyPath: gloablKnockPower
       value: 100
       objectReference: {fileID: 0}
@@ -1732,6 +1743,12 @@ PrefabInstance:
       propertyPath: stillTime
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
+      objectReference: {fileID: 1647914593940153521, guid: af5b9e9b9b6914f45ae4398e01ba7c26,
+        type: 3}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: gloablKnockPower
@@ -1941,6 +1958,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
+      propertyPath: enemyHitParticle
+      value: 
+      objectReference: {fileID: 1647914593940153521, guid: af5b9e9b9b6914f45ae4398e01ba7c26,
+        type: 3}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
       propertyPath: gloablKnockPower
       value: 100
       objectReference: {fileID: 0}
@@ -2143,6 +2166,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
+      propertyPath: enemyHitParticle
+      value: 
+      objectReference: {fileID: 1647914593940153521, guid: af5b9e9b9b6914f45ae4398e01ba7c26,
+        type: 3}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
       propertyPath: gloablKnockPower
       value: 100
       objectReference: {fileID: 0}
@@ -2343,6 +2372,12 @@ PrefabInstance:
       propertyPath: stillTime
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
+        type: 3}
+      propertyPath: enemyHitParticle
+      value: 
+      objectReference: {fileID: 1647914593940153521, guid: af5b9e9b9b6914f45ae4398e01ba7c26,
+        type: 3}
     - target: {fileID: 5195967727234264479, guid: 3564f291c39d60c4ba87a0de878e0c41,
         type: 3}
       propertyPath: gloablKnockPower
