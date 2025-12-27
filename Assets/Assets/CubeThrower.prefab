@@ -705,14 +705,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 200
-  currentHealth: 0
   collisionList:
   - Bullet
   deathParticle: {fileID: 8376915286951860943, guid: ea18ea98dea7daf409772c4eaafcb22d,
     type: 3}
   sprite: {fileID: 3821677348390038964}
   currentSprite: {r: 0, g: 0, b: 0, a: 0}
-  gloablKnockPower: 85
+  gloablKnockPower: 40
   anim: {fileID: 5285538891901169336}
 --- !u!95 &5285538891901169336
 Animator:

@@ -42,7 +42,7 @@ public class BulletMovement : MonoBehaviour
                     if(health != null)
                     {
                         Vector2 direction = (collision.gameObject.transform.position - transform.position).normalized;
-                        health.enemyHit(direction, 85f, bulletDamage);
+                        health.enemyHit(direction, health.gloablKnockPower, bulletDamage);
                     }
                 }
                 else

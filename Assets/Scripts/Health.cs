@@ -8,7 +8,6 @@ public class Health : MonoBehaviour
     private Rigidbody2D rb;
     public int maxHealth = 100;
     private int currentHealth;
-    public string[] collisionList;
 
     public ParticleSystem deathParticle;
 
@@ -20,8 +19,6 @@ public class Health : MonoBehaviour
     private EnemyMovement enemyMovement;
 
     public Animator anim;
-
-    // Start is called before the first frame update
 
     void Start()
     {
@@ -39,7 +36,7 @@ public class Health : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    //GitHub Test
+
     IEnumerator Flash()
     {   //Flash when hit
         sprite.color = Color.white;
@@ -47,6 +44,7 @@ public class Health : MonoBehaviour
         sprite.color = currentSprite;
     }
 
+    //Public enemyHit trigger method
     public void enemyHit(Vector2 direction, float knockPower, int damageTaken) //add a parameter for damageTaken
     {
         StartCoroutine(Flash());
