@@ -1,228 +1,232 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 public class PlayerMovement : MonoBehaviour
 {
-    public static PlayerMovement instance;
+    public static PlayerMovement Instance;
 
+    [Header("Movement")]
     public float moveSpeed = 5f;
-
-    //Jump variables
-    public float jumpForce = 11f;
-    public float jumpCut;
-    public float coyoteTime = 0.15f;
-    private float coyoteTimeCounter;
-    public float jumpBufferTime;
-    private float jumpBufferCounter;
-    public float gravityMultiplier;
-    public float gravityScale;
-    public int gravitySlideCheck = 0;
-
-    //Dash variables
-    public TrailRenderer dashTrail;
-    private bool canDash = true;
-    private bool isDashing = false;
-    public float dashPower;
-    public float dashingTime;
-    public float dashingCoolDown;
-
-    private bool isClimbing = false;
-    private bool isLadder = false;
-    public float climbingSpeed;
-
-
-    public Animator anim;
-
-    private Rigidbody2D rb;
-    public Vector2 boxSize;
-    public float boxIntercept;
-    public float castDistance;
-    public LayerMask groundLayer;
-
-    public Transform wallCheck;
-    public LayerMask wallLayer;
-    private bool isWallSliding = false;
-    public float wallSlidingSpeed;
-
     private float horizontalInput;
     private float verticalInput;
 
-    private int maxhealth = 1;
-    public int currenthealth;
+    [Header("Jump")]
+    public float jumpForce = 11f;
+    public float jumpCut = 0.5f;
+    public float coyoteTime = 0.15f;
+    public float jumpBufferTime = 0.15f;
+    private float coyoteCounter;
+    private float jumpBufferCounter;
 
+    [Header("Gravity")]
+    public float gravityScale = 3f;
+    public float gravityMultiplier = 2f;
+
+    [Header("Dash")]
+    public float dashPower = 12f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 0.5f;
+    public TrailRenderer dashTrail;
+    private bool canDash = true;
+    private bool isDashing;
+
+    [Header("Climbing")]
+    public float climbSpeed = 4f;
+    private bool isClimbing;
+    private bool isLadder;
+
+    [Header("Wall Slide")]
+    public LayerMask wallLayer;
+    public float wallSlideSpeed = 2f;
+    private bool isWallSliding;
+
+    [Header("Ground Check")]
+    public Vector2 boxSize;
+    public float castDistance;
+    public LayerMask groundLayer;
+
+    private Rigidbody2D rb;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
-    void Start()
-    {
 
-        currenthealth = maxhealth;
+    private void Start()
+    {
         rb = GetComponent<Rigidbody2D>();
-
     }
 
-    public bool IsGrounded()
+    private void Update()
     {
-        return Physics2D.BoxCast(new Vector2(transform.position.x - boxIntercept, transform.position.y), boxSize, 0, -transform.up, castDistance, groundLayer);
-    }
-
-
-    private bool isWalled()
-    {
-        return Physics2D.OverlapCircle(transform.position, 0.5f, wallLayer);
-    }
-
-    private void wallSlide()
-    {
-        if(isWalled() && !IsGrounded() && horizontalInput != 0)
-        {
-            isWallSliding = true;
-            Debug.Log("its waling");
-            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
-        }
-        else
-        {
-            isWallSliding = false;
-            return;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(new Vector2(transform.position.x - boxIntercept, transform.position.y - castDistance), boxSize);
-    }
-
-    void Update()
-    {
-        // Handle player input
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        wallSlide();
-        CheckDashing();
-        CheckJump();
-        CheckClimbing();
+        ReadInput();
+        HandleJumpInput();
+        HandleDashInput();
+        HandleWallSlide();
+        HandleClimbingCheck();
     }
 
     private void FixedUpdate()
     {
-        Physics2D.IgnoreLayerCollision(8, 6, true);
+        Move();
+        ApplyJump();
+        ApplyClimbing();
+        ApplyGravity();
+    }
 
+    #region Input
 
-        if (isClimbing)
+    private void ReadInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+    }
+
+    private void HandleJumpInput()
+    {
+        jumpBufferCounter = Input.GetButton("Jump")
+            ? jumpBufferTime
+            : jumpBufferCounter - Time.deltaTime;
+
+        coyoteCounter = IsGrounded()
+            ? coyoteTime
+            : coyoteCounter - Time.deltaTime;
+    }
+
+    private void HandleDashInput()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
-            rb.gravityScale = 0f;
-            rb.velocity = new Vector2(rb.velocity.x, verticalInput * climbingSpeed);
-            Debug.Log("climbing");
+            StartCoroutine(Dash());
         }
-        else
-        {
-            rb.gravityScale = gravityScale;
-        }
+    }
 
-        Run(moveSpeed);
-        // Handle jumping
-        if (coyoteTimeCounter > 0f && jumpBufferCounter > 0f)
+    #endregion
+
+    #region Movement
+
+    private void Move()
+    {
+        if (isDashing) return;
+        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
+    }
+
+    private void ApplyJump()
+    {
+        if (jumpBufferCounter > 0 && coyoteCounter > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            jumpBufferCounter = 0f;
-        }
-        if (Input.GetButtonUp("Jump"))
-        {
-            if (Mathf.Abs(rb.velocity.y) > 0)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpCut);
-            }
-            coyoteTimeCounter = 0f;
+            jumpBufferCounter = 0;
         }
 
-        if (Mathf.Abs(rb.velocity.y) < 0)
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
         {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpCut);
+        }
+    }
+
+    private void ApplyGravity()
+    {
+        if (rb.velocity.y < 0)
             rb.gravityScale = gravityScale * gravityMultiplier;
-        }
-    }
-
-    private void CheckClimbing()
-    {
-        if(isLadder && Mathf.Abs(verticalInput) > 0f)
-        {
-            Debug.Log("touchedboth");
-            isClimbing = true;
-        }
-    }
-    
-    private void CheckJump()
-    {
-        //Creates extra time before landing to make jumping smoother when pressing jump quickly
-        if (Input.GetButton("Jump"))
-        {
-            jumpBufferCounter = jumpBufferTime;
-        }
         else
-        {
-            jumpBufferCounter -= Time.deltaTime;
-        }
-        //Creates extra JumpTime jumping off the ledge smoother by creating extra time to jump off-land
-        if (IsGrounded() == true)
-        {
-            coyoteTimeCounter = coyoteTime;
-            rb.gravityScale = gravitySlideCheck;
-        }
-        else
-        {
-            coyoteTimeCounter -= Time.deltaTime;
             rb.gravityScale = gravityScale;
-        }
-    }
-    private void CheckDashing()
-    {
-         if (isDashing)
-         {
-            return;
-         }
-        
-         if (Input.GetKeyDown(KeyCode.LeftShift))
-         {
-            if(canDash)
-            {
-                StartCoroutine(Dash());
-            }
-         }
     }
 
-    private void Run(float movementSpeed)
+    #endregion
+
+    #region Climbing
+
+    private void HandleClimbingCheck()
     {
-        rb.velocity = new Vector2(moveSpeed * horizontalInput, rb.velocity.y);
+        isClimbing = isLadder && Mathf.Abs(verticalInput) > 0;
     }
+
+    private void ApplyClimbing()
+    {
+        if (!isClimbing) return;
+
+        rb.gravityScale = 0f;
+        rb.velocity = new Vector2(rb.velocity.x, verticalInput * climbSpeed);
+    }
+
+    #endregion
+
+    #region Wall Slide
+
+    private void HandleWallSlide()
+    {
+        if (IsTouchingWall() && !IsGrounded() && horizontalInput != 0)
+        {
+            isWallSliding = true;
+            rb.velocity = new Vector2(
+                rb.velocity.x,
+                Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue)
+            );
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }
+
+    private bool IsTouchingWall()
+    {
+        return Physics2D.OverlapCircle(transform.position, 0.5f, wallLayer);
+    }
+
+    #endregion
+
+    #region Dash
 
     private IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
+
         float originalGravity = rb.gravityScale;
-        rb.gravityScale = 0;
-        rb.velocity = new Vector2(horizontalInput * dashPower, 0f);
+        rb.gravityScale = 0f;
+
+        rb.velocity = new Vector2(horizontalInput * dashPower, 0);
         dashTrail.emitting = true;
-        yield return new WaitForSeconds(dashingTime);
+
+        yield return new WaitForSeconds(dashDuration);
+
         dashTrail.emitting = false;
+        rb.gravityScale = originalGravity;
         isDashing = false;
-        yield return new WaitForSeconds(dashingCoolDown);
+
+        yield return new WaitForSeconds(dashCooldown);
         canDash = true;
-
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    #endregion
+
+    #region Ground Check
+
+    private bool IsGrounded()
     {
-        if (collision.CompareTag("Ladder"))
-        {
+        return Physics2D.BoxCast(
+            transform.position,
+            boxSize,
+            0,
+            Vector2.down,
+            castDistance,
+            groundLayer
+        );
+    }
+
+    #endregion
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Ladder"))
             isLadder = true;
-        }
     }
-    private void OnTriggerExit2D(Collider2D collision)
+
+    private void OnTriggerExit2D(Collider2D col)
     {
-        if (collision.CompareTag("Ladder"))
+        if (col.CompareTag("Ladder"))
         {
             isLadder = false;
             isClimbing = false;
