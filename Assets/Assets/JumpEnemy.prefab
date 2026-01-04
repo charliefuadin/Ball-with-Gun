@@ -242,11 +242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 75
-  currentHealth: 0
-  collisionList:
-  - Bullet
-  enemyHitParticle: {fileID: 1647914593940153521, guid: af5b9e9b9b6914f45ae4398e01ba7c26,
-    type: 3}
   deathParticle: {fileID: 8376915286951860943, guid: ea18ea98dea7daf409772c4eaafcb22d,
     type: 3}
   sprite: {fileID: 3478542632464550008}
@@ -308,7 +303,7 @@ MonoBehaviour:
   seeSize: {x: 60, y: 0.47}
   runUpDistance: 15
   jumpHeight: 150
-  jumpSpeed: 3
+  jumpSpeed: 5
   gravityMultiplier: 1.1
   isJumpEnemy: 1
   collisionIgnores:

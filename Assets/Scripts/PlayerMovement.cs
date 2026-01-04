@@ -13,25 +13,34 @@ public enum MovementState
 }
 public class PlayerMovement : MonoBehaviour
 {
+    #region Variables
     MovementState playerState;
+    [Header("Standard Componenets")]
+    [SerializeField] Animator anim;
+    private float horizontalInput;
+    private float verticalInput;
+    private Rigidbody2D rb;
 
+    [Header("Player Run")]
     [SerializeField] float moveSpeed = 5f;
-    
-    //Jump variables
+
+    [Header("Player Climb")]
+    [SerializeField] float climbingSpeed;
+
+    [Header("Player Jump")]
     [SerializeField] float jumpForce = 11f;
     [SerializeField] float jumpCut;
-
     [SerializeField] float coyoteTime = 0.15f;
     private float coyoteTimeCounter;
-
     [SerializeField] float jumpBufferTime;
     private float jumpBufferCounter;
 
+    [Header("Gravity")]
     [SerializeField] float gravityMultiplier;
     [SerializeField] float gravityScale;
     [SerializeField] int gravitySlideCheck = 0;
 
-    //Dash variables
+    [Header("Dash")]
     [SerializeField] TrailRenderer dashTrail;
     private bool canDash = true;
     private bool dashRequest = false;
@@ -39,34 +48,25 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float dashingTime;
     [SerializeField] float dashingCoolDown;
 
-
-    [SerializeField] float climbingSpeed;
-
-    [SerializeField] Animator anim;
-
-    private Rigidbody2D rb;
+    [Header("Player JumpCheck")]
     [SerializeField] Vector2 boxSize;
     [SerializeField] float boxIntercept;
     [SerializeField] float castDistance;
     [SerializeField] LayerMask groundLayer;
 
+    [Header("Player WallSlide")]
     [SerializeField] Transform wallCheck;
     [SerializeField] LayerMask wallLayer;
     [SerializeField] float wallSlidingSpeed;
 
-    private float horizontalInput;
-    private float verticalInput;
-
-    private int maxhealth = 1;
-    [SerializeField] int currenthealth;
-
+    [Header("Player Health")]
+    private int currentHealth = 1;
+    [SerializeField] int maxHealth;
+    #endregion
 
     void Start()
     {
-
-        currenthealth = maxhealth;
         rb = GetComponent<Rigidbody2D>();
-
     }
 
     private void PlayerInput()
@@ -79,7 +79,6 @@ public class PlayerMovement : MonoBehaviour
     {
         PlayerInput();
         //Prevents Player from moving during dash
-        
         CheckJump();
         CheckDash();
         CheckWallSlide();
@@ -89,6 +88,11 @@ public class PlayerMovement : MonoBehaviour
     {
         Physics2D.IgnoreLayerCollision(8, 6, true);
         //Prevents Player from moving during dash
+        UpdateState();
+    }
+
+    private void UpdateState()
+    {
         switch (playerState)
         {
             case MovementState.Normal:
@@ -120,15 +124,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(moveSpeed * horizontalInput, rb.velocity.y);
     }
 
-    #region
-    private void CheckClimbing()
-    {
-        if (Mathf.Abs(verticalInput) > 0f)
-        {
-            Debug.Log("touchedboth");
-            playerState = MovementState.Climbing;
-        }
-    }
+    #region Climbing
     private void ApplyClimbing()
     {
         rb.gravityScale = 0f;
