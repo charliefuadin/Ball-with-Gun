@@ -81,7 +81,6 @@ public class SniperLaser : MonoBehaviour
             }
             hitEnemies.Add(health);
             //Declares enemy as already pierced
-            //Also adds to the list
 
             if (hitEnemies.Count > pierceAmount)
             {
