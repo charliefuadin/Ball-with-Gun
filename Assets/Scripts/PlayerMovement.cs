@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 public enum MovementState
@@ -82,7 +83,6 @@ public class PlayerMovement : MonoBehaviour
         CheckJump();
         CheckDash();
         CheckWallSlide();
-        CheckClimbing();
     }
 
     private void FixedUpdate()
@@ -119,6 +119,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = new Vector2(moveSpeed * horizontalInput, rb.velocity.y);
     }
+
     #region
     private void CheckClimbing()
     {
@@ -264,13 +265,15 @@ public class PlayerMovement : MonoBehaviour
     {
         Gizmos.DrawWireCube(new Vector2(transform.position.x - boxIntercept, transform.position.y - castDistance), boxSize);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Ladder"))
         {
             playerState = MovementState.Climbing;
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Ladder"))

@@ -2660,19 +2660,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5471528899289775498, guid: 9749ee90efa49ea49a17d3c8c5d3fbf7,
-        type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5471528899289775503, guid: 9749ee90efa49ea49a17d3c8c5d3fbf7,
         type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 5471528899289775503, guid: 9749ee90efa49ea49a17d3c8c5d3fbf7,
-        type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5874225358292885545, guid: 9749ee90efa49ea49a17d3c8c5d3fbf7,
