@@ -604,7 +604,7 @@ MonoBehaviour:
   gravityScale: 5.5
   gravitySlideCheck: 0
   dashTrail: {fileID: 6359638665742047741}
-  dashPower: 40
+  dashPower: 50
   dashingTime: 0.17
   dashingCoolDown: 0.5
   climbingSpeed: 10

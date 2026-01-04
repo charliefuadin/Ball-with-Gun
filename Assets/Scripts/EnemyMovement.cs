@@ -66,7 +66,6 @@ public class EnemyMovement : MonoBehaviour
         UpdateState();
     }
 
-
     private void EnvironmentCheck()
     {
         direction = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.y - transform.position.y);
@@ -140,6 +139,7 @@ public class EnemyMovement : MonoBehaviour
             MoveToPlayer();
         }
     }
+
 
     private void MoveToPlayer()
     {

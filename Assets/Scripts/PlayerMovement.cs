@@ -1,121 +1,212 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+public enum MovementState
+{
+    Normal,
+    Dashing,
+    Climbing,
+    WallSlide
+}
 public class PlayerMovement : MonoBehaviour
 {
-    public static PlayerMovement instance;
-
-    public float moveSpeed = 5f;
-
-    //Jump variables
-    public float jumpForce = 11f;
-    public float jumpCut;
-    public float coyoteTime = 0.15f;
-    private float coyoteTimeCounter;
-    public float jumpBufferTime;
-    private float jumpBufferCounter;
-    public float gravityMultiplier;
-    public float gravityScale;
-    public int gravitySlideCheck = 0;
-
-    //Dash variables
-    public TrailRenderer dashTrail;
-    private bool canDash = true;
-    private bool isDashing = false;
-    public float dashPower;
-    public float dashingTime;
-    public float dashingCoolDown;
-
-    private bool isClimbing = false;
-    private bool isLadder = false;
-    public float climbingSpeed;
-
-
-    public Animator anim;
-
-    private Rigidbody2D rb;
-    public Vector2 boxSize;
-    public float boxIntercept;
-    public float castDistance;
-    public LayerMask groundLayer;
-
-    public Transform wallCheck;
-    public LayerMask wallLayer;
-    private bool isWallSliding = false;
-    public float wallSlidingSpeed;
-
+    #region Variables
+    MovementState playerState;
+    [Header("Standard Componenets")]
+    [SerializeField] Animator anim;
     private float horizontalInput;
     private float verticalInput;
+    private Rigidbody2D rb;
 
-    private int maxhealth = 1;
-    public int currenthealth;
+    [Header("Player Run")]
+    [SerializeField] float moveSpeed = 5f;
 
+    [Header("Player Climb")]
+    [SerializeField] float climbingSpeed;
 
-    private void Awake()
-    {
-        instance = this;
-    }
+    [Header("Player Jump")]
+    [SerializeField] float jumpForce = 11f;
+    [SerializeField] float jumpCut;
+    [SerializeField] float coyoteTime = 0.15f;
+    private float coyoteTimeCounter;
+    [SerializeField] float jumpBufferTime;
+    private float jumpBufferCounter;
+
+    [Header("Gravity")]
+    [SerializeField] float gravityMultiplier;
+    [SerializeField] float gravityScale;
+    [SerializeField] int gravitySlideCheck = 0;
+
+    [Header("Dash")]
+    [SerializeField] TrailRenderer dashTrail;
+    private bool canDash = true;
+    private bool dashRequest = false;
+    [SerializeField] float dashPower;
+    [SerializeField] float dashingTime;
+    [SerializeField] float dashingCoolDown;
+
+    [Header("Player JumpCheck")]
+    [SerializeField] Vector2 boxSize;
+    [SerializeField] float boxIntercept;
+    [SerializeField] float castDistance;
+    [SerializeField] LayerMask groundLayer;
+
+    [Header("Player WallSlide")]
+    [SerializeField] Transform wallCheck;
+    [SerializeField] LayerMask wallLayer;
+    [SerializeField] float wallSlidingSpeed;
+
+    [Header("Player Health")]
+    private int currentHealth = 1;
+    [SerializeField] int maxHealth;
+    #endregion
+
     void Start()
     {
-
-        currenthealth = maxhealth;
         rb = GetComponent<Rigidbody2D>();
-
     }
 
+    private void PlayerInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+    }
+  
+    void Update()
+    {
+        PlayerInput();
+        //Prevents Player from moving during dash
+        CheckJump();
+        CheckDash();
+        CheckWallSlide();
+    }
+
+    private void FixedUpdate()
+    {
+        Physics2D.IgnoreLayerCollision(8, 6, true);
+        //Prevents Player from moving during dash
+        UpdateState();
+    }
+
+    private void UpdateState()
+    {
+        switch (playerState)
+        {
+            case MovementState.Normal:
+                GravityMultiply();
+                ApplyJump();
+                Run();
+                break;
+            case MovementState.Dashing:
+                ApplyDash();
+                break;
+            case MovementState.Climbing:
+                ApplyClimbing();
+                Run();
+                break;
+            case MovementState.WallSlide:
+                ApplyWallSlide();
+                Run();
+                break;
+            default:
+                GravityMultiply();
+                ApplyJump();
+                Run();
+                break;
+        }
+    }
+
+    private void Run()
+    {
+        rb.velocity = new Vector2(moveSpeed * horizontalInput, rb.velocity.y);
+    }
+
+    #region Climbing
+    private void ApplyClimbing()
+    {
+        rb.gravityScale = 0f;
+        rb.velocity = new Vector2(rb.velocity.x, verticalInput * climbingSpeed);
+        Debug.Log("climbing");
+    }
+    #endregion
+
+    #region Dash
+    private void CheckDash()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        {
+            dashRequest = true;
+            playerState = MovementState.Dashing;
+        }
+    }
+    private void ApplyDash()
+    {
+        if (dashRequest)
+        {
+            dashRequest = false;
+            StartCoroutine(Dash());
+        }
+    }
+    private IEnumerator Dash()
+    {
+        canDash = false;
+
+        rb.gravityScale = 0;
+        rb.velocity = new Vector2(horizontalInput * dashPower, 0f);
+        dashTrail.emitting = true;
+
+        yield return new WaitForSeconds(dashingTime);
+        dashTrail.emitting = false;
+
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        rb.gravityScale = gravityScale;
+        playerState = MovementState.Normal;
+
+        yield return new WaitForSeconds(dashingCoolDown);
+        canDash = true;
+    }
+    #endregion
+
+    #region Wall Slide
+    private bool isWalled()
+    { 
+        return Physics2D.OverlapCircle(transform.position, 0.5f, wallLayer);
+    }
+    private void CheckWallSlide()
+    {
+        if (isWalled() &&horizontalInput != 0 && !IsGrounded())
+        {
+            playerState = MovementState.WallSlide;
+            Debug.Log("its waling");
+        }
+        else
+        {
+            if (playerState == MovementState.WallSlide)
+            {
+                playerState = MovementState.Normal;
+            }
+        }
+    }
+    private void ApplyWallSlide()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+    }
+    #endregion
+
+    #region Jump
     public bool IsGrounded()
     {
         return Physics2D.BoxCast(new Vector2(transform.position.x - boxIntercept, transform.position.y), boxSize, 0, -transform.up, castDistance, groundLayer);
     }
-
-
-    private bool isWalled()
+    private void CheckJump()
     {
-        return Physics2D.OverlapCircle(transform.position, 0.5f, wallLayer);
-    }
-
-    private void wallSlide()
-    {
-        if(isWalled() && !IsGrounded() && horizontalInput != 0)
-        {
-            isWallSliding = true;
-            Debug.Log("its waling");
-            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
-        }
-        else
-        {
-            isWallSliding = false;
-            return;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(new Vector2(transform.position.x - boxIntercept, transform.position.y - castDistance), boxSize);
-    }
-
-    void Update()
-    {
-        // Handle player input
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        wallSlide();
-        //Prevents Player from moving during dash
-        if (isDashing)
+        if (playerState == MovementState.Dashing)
         {
             return;
         }
-
-        if(isLadder && Mathf.Abs(verticalInput) > 0f)
-        {
-            Debug.Log("touchedboth");
-            isClimbing = true;
-        }
-
-        // Apply movement
-
-        //Creates extra JumpTime jumping off the ledge smoother by creating extra time to jump off-land
         if (IsGrounded() == true)
         {
             coyoteTimeCounter = coyoteTime;
@@ -136,38 +227,9 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpBufferCounter -= Time.deltaTime;
         }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            if(canDash)
-            {
-                StartCoroutine(Dash());
-            }
-        }
     }
-
-    private void FixedUpdate()
+    private void ApplyJump()
     {
-        Physics2D.IgnoreLayerCollision(8, 6, true);
-        //Prevents Player from moving during dash
-        if (isDashing)
-        {
-            return;
-        }
-
-        if (isClimbing)
-        {
-            rb.gravityScale = 0f;
-            rb.velocity = new Vector2(rb.velocity.x, verticalInput * climbingSpeed);
-            Debug.Log("climbing");
-        }
-        else
-        {
-            rb.gravityScale = gravityScale;
-        }
-
-        Run(moveSpeed);
-        // Handle jumping
         if (coyoteTimeCounter > 0f && jumpBufferCounter > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -181,47 +243,38 @@ public class PlayerMovement : MonoBehaviour
             }
             coyoteTimeCounter = 0f;
         }
-
-        if (Mathf.Abs(rb.velocity.y) < 0)
+    }
+    private void GravityMultiply()
+    {
+        if (rb.velocity.y < 0)
         {
             rb.gravityScale = gravityScale * gravityMultiplier;
         }
+        else
+        {
+            rb.gravityScale = gravityScale;
+        }
     }
+    #endregion
 
-    private void Run(float movementSpeed)
+    private void OnDrawGizmos()
     {
-        rb.velocity = new Vector2(moveSpeed * horizontalInput, rb.velocity.y);
+        Gizmos.DrawWireCube(new Vector2(transform.position.x - boxIntercept, transform.position.y - castDistance), boxSize);
     }
 
-    private IEnumerator Dash()
-    {
-        canDash = false;
-        isDashing = true;
-        float originalGravity = rb.gravityScale;
-        rb.gravityScale = 0;
-        rb.velocity = new Vector2(horizontalInput * dashPower, 0f);
-        dashTrail.emitting = true;
-        yield return new WaitForSeconds(dashingTime);
-        dashTrail.emitting = false;
-        isDashing = false;
-        yield return new WaitForSeconds(dashingCoolDown);
-        canDash = true;
-
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Ladder"))
         {
-            isLadder = true;
+            playerState = MovementState.Climbing;
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Ladder"))
         {
-            isLadder = false;
-            isClimbing = false;
+            playerState = MovementState.Normal;
         }
     }
 }
