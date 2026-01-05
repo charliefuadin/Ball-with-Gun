@@ -6,8 +6,8 @@ public class Health : MonoBehaviour
 {
 
     private Rigidbody2D rb;
-    public int maxHealth = 100;
-    private int currentHealth;
+    public float maxHealth = 100;
+    private float currentHealth;
 
     public ParticleSystem deathParticle;
 
@@ -45,7 +45,7 @@ public class Health : MonoBehaviour
     }
 
     //Public enemyHit trigger method
-    public void enemyHit(Vector2 direction, float knockPower, int damageTaken) //add a parameter for damageTaken
+    public void enemyHit(Vector2 direction, float knockPower, float damageTaken) //add a parameter for damageTaken
     {
         StartCoroutine(Flash());
         anim.SetTrigger("damageTaken");

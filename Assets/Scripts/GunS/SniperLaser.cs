@@ -6,7 +6,6 @@ public class SniperLaser : MonoBehaviour
 {
     [SerializeField] ParticleSystem enemyHitParticle;
     [SerializeField] Animator anim;
-
     [SerializeField] Transform firePoint;
     [SerializeField] LineRenderer sniperLaser;
 
@@ -14,9 +13,14 @@ public class SniperLaser : MonoBehaviour
     private Vector2 direction;
     [SerializeField] int pierceAmount;
 
-    [SerializeField] float decayConstant;
+    [SerializeField] float sniperMinDamage;
+    [SerializeField] float sniperMaxDamage;
+    private float sniperDamage;
+
+    [SerializeField] float decayConstantRate;
     [SerializeField] float minimumWidth;
     private float originalWidth;
+    private float elapsedTime;
 
     private bool ableToClick = true;
     [SerializeField] float clickRate;
@@ -24,6 +28,7 @@ public class SniperLaser : MonoBehaviour
     private void Start()
     {
         originalWidth = sniperLaser.startWidth;
+        sniperDamage = sniperMinDamage;
     }
     private void Update()
     {
@@ -59,8 +64,14 @@ public class SniperLaser : MonoBehaviour
     {
         //Sets per click
         sniperLaser.enabled = false;
+
         yield return new WaitForSeconds(clickRate);
         sniperLaser.enabled = true;
+
+        SetLineWidth(originalWidth);
+        sniperDamage = sniperMinDamage;
+        elapsedTime = 0f;
+
         ableToClick = true;
     }
     private void GunDirection()
@@ -73,14 +84,24 @@ public class SniperLaser : MonoBehaviour
         }
     }
 
+
+    //Tommorow make a gradient for the sniper laser
     private void SniperHold()
     {
-        float elapsedTime = Time.deltaTime;
-        float currentWidth = originalWidth * Mathf.Pow(1 - decayConstant, elapsedTime);
+        elapsedTime += Time.deltaTime;
+        float currentWidth = originalWidth * Mathf.Exp(-decayConstantRate * elapsedTime);
 
-        Mathf.Clamp(currentWidth, minimumWidth, originalWidth);
+        currentWidth = Mathf.Clamp(currentWidth, minimumWidth, originalWidth);
         SetLineWidth(currentWidth);
-        
+        DamageMultiplier(currentWidth);
+        Debug.Log(sniperDamage);
+    }
+
+    private void DamageMultiplier(float width)
+    {
+        float widthFraction = Mathf.InverseLerp(originalWidth, minimumWidth, width);
+
+        sniperDamage = Mathf.Lerp(sniperMinDamage, sniperMaxDamage, widthFraction);
     }
 
     private void SetLineWidth(float lineWidth)
@@ -114,7 +135,7 @@ public class SniperLaser : MonoBehaviour
             {
                 break;
             }
-            health.enemyHit(direction, 200, 60);
+            health.enemyHit(direction, 200, sniperDamage);
             Instantiate(enemyHitParticle, objectHit.point, objectHit.transform.rotation);
         }
     }

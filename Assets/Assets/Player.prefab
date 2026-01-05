@@ -105,6 +105,10 @@ MonoBehaviour:
   firePoint: {fileID: 1281927610169540675}
   sniperLaser: {fileID: 7405127229774057872}
   pierceAmount: 6
+  sniperMinDamage: 40
+  sniperMaxDamage: 90
+  decayConstantRate: 0.5
+  minimumWidth: 0.15
   clickRate: 0.6
 --- !u!1 &627634297910990678
 GameObject:
@@ -190,7 +194,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.316613
+        value: 0.35337904
         inSlope: -0.8609823
         outSlope: -0.8609823
         tangentMode: 0
