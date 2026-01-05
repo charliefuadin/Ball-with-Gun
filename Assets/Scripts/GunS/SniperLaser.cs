@@ -14,10 +14,17 @@ public class SniperLaser : MonoBehaviour
     private Vector2 direction;
     [SerializeField] int pierceAmount;
 
+    [SerializeField] float decayConstant;
+    [SerializeField] float minimumWidth;
+    private float originalWidth;
+
     private bool ableToClick = true;
     [SerializeField] float clickRate;
 
-
+    private void Start()
+    {
+        originalWidth = sniperLaser.startWidth;
+    }
     private void Update()
     {
         GunDirection();
@@ -27,6 +34,10 @@ public class SniperLaser : MonoBehaviour
 
     private void Shoot()
     {
+        if (Input.GetButton("Fire1"))
+        {
+            SniperHold();
+        }
         //Semi-Auto shots based on players click
         if (Input.GetButtonUp("Fire1"))
         {
@@ -60,6 +71,23 @@ public class SniperLaser : MonoBehaviour
         {
             direction = -direction;
         }
+    }
+
+    private void SniperHold()
+    {
+        float elapsedTime = Time.deltaTime;
+        float currentWidth = originalWidth * Mathf.Pow(1 - decayConstant, elapsedTime);
+
+        Mathf.Clamp(currentWidth, minimumWidth, originalWidth);
+        SetLineWidth(currentWidth);
+        
+    }
+
+    private void SetLineWidth(float lineWidth)
+    {
+        sniperLaser.startWidth = lineWidth;
+
+        sniperLaser.endWidth = lineWidth;
     }
 
     private void SniperShot()

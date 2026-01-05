@@ -189,14 +189,14 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.045515575
-        value: 0.35337904
-        inSlope: 0
-        outSlope: 0
+        time: 0
+        value: 0.316613
+        inSlope: -0.8609823
+        outSlope: -0.8609823
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.2735098
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -595,7 +595,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 075f68222f6e0bd47801dfedf7d426d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 4069067503121731202}
   moveSpeed: 15
+  climbingSpeed: 10
   jumpForce: 16
   jumpCut: 0.65
   coyoteTime: 0.1
@@ -607,20 +609,17 @@ MonoBehaviour:
   dashPower: 50
   dashingTime: 0.17
   dashingCoolDown: 0.5
-  climbingSpeed: 10
-  anim: {fileID: 4069067503121731202}
   boxSize: {x: 0.43, y: 0.53}
   boxIntercept: 0
   castDistance: 0.51
   groundLayer:
     serializedVersion: 2
     m_Bits: 576
-  wallCheck: {fileID: 0}
   wallLayer:
     serializedVersion: 2
     m_Bits: 128
   wallSlidingSpeed: 1.5
-  currenthealth: 1
+  maxHealth: 0
 --- !u!95 &4069067503121731202
 Animator:
   serializedVersion: 5
